@@ -1,0 +1,59 @@
+=========================Create Database==================
+CREATE DATABASE Chapter7Lab1;
+
+=========================FOREIGN Key Table Creation========
+
+CREATE TABLE Genre (
+   Genre_id BIGINT UNSIGNED NOT NULL,
+   Genre_name VARCHAR(25) NOT NULL,
+   Genre_description VARCHAR(250) NOT NULL,
+   PRIMARY KEY (Genre_id)
+);
+
+=========================FOREIGN Key Table Creation========
+CREATE TABLE Label (
+   Label_id BIGINT UNSIGNED NOT NULL,
+   Label_name VARCHAR(25) NOT NULL,
+   Label_country VARCHAR(25) NOT NULL,
+   Label_year BIGINT UNSIGNED NOT NULL,
+   PRIMARY KEY (Label_id)
+);
+===========================Primary Key=====================
+
+CREATE TABLE Artist (
+  Artist_id BIGINT UNSIGNED NOT NULL,
+  Artist_name VARCHAR(20) NOT NULL,
+  Artist_country VARCHAR(20) NOT NULL,
+  Artist_year BIGINT UNSIGNED NOT NULL,
+  Artist_genre BIGINT UNSIGNED NOT NULL,
+  Artist_label BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (Artist_id),
+  CONSTRAINT `fk_artist_genre`
+    FOREIGN KEY (Artist_genre) REFERENCES Genre(Genre_id)
+    ON DELETE CASCADE
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_artist_label`
+    FOREIGN KEY (Artist_label) REFERENCES Label (Label_id)
+    ON DELETE CASCADE
+    ON UPDATE RESTRICT
+);
+
+============================================================
+
+======================Loading Data to Tables ===============
+load data local infile '/root/Documents/Label.csv' into table
+Label fields terminated by ',' ignore 1 lines;
+
+load data local infile '/root/Documents/Genre.csv' into table
+Genre fields terminated by ',' ignore 1 lines;
+
+load data local infile '/root/Documents/Artist.csv' into table
+Artist fields terminated by ',' ignore 1 lines;
+
+
+===================== Query ===============================
+
+SELECT Artist.Artist_name, Label.Label_name, Genre.Genre_name, Genre.Genre_description FROM Artist JOIN Label ON Artist.Artist_label = Label.Label_id JOIN Genre ON Genre.Genre_id = Artist.Artist_genre;
+
+
+===================================================================
